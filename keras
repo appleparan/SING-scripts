@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /bin/zsh
 #U .TH keras 1
 #U .SH NAME
 #U keras \- simple wrapper around a keras singularity container
@@ -45,36 +45,16 @@ function usage() {
         | less -e
 }
 
-keras_img="${PWD}/keras-py2.simg"
+keras_img="/opt/singularity/keras-jskim.img"
 keras_backend="tensorflow"
 cmd="help"
 
-while getopts ":B:" opt; do
-    case $opt in
-        B)
-            export SINGULARITY_BINDPATH="$OPTARG"
-            ;;
-        \?)
-            echo "Invalid option: -$OPTARG" >&2
-            usage
-            exit 1
-            ;;
-    esac
-done
-shift $((OPTIND-1))
-
 while true; do
     case "$1" in
-        ipython)
-            cmd="ipython"
-            shift
-            break
-            ;;
         python)
             cmd="python"
             shift
             break
-            ;;
             ;;
         shell)
             cmd="shell"
@@ -91,17 +71,17 @@ done
 export KERAS_BACKEND="$keras_backend"
 
 case "$cmd" in
-    ipython)
-        singularity exec --nv "${keras_img}" ipython "$@"
-        ;;
     python)
-        singularity exec --nv "${keras_img}" python3 "$@"
-        ;;
-    notebook)
-        singularity exec --nv "${keras_img}" jupyter notebook --no-browser
+        if [ "$1" != "" ]
+        then
+            singularity exec --bind ${HOME}/input:/input,${HOME}/data/"$1":/mnt --nv "${keras_img}" python3 "$@"
+        fi
         ;;
     shell)
-        singularity exec --nv "${keras_img}" bash
+        if [ "$1" != "" ]
+        then 
+            singularity exec --bind ${HOME}/input:/input,${HOME}/data/"$1":/mnt --nv "${keras_img}" ls /mnt/
+        fi
         ;;
     help)
         usage
