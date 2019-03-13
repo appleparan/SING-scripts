@@ -1,4 +1,5 @@
 #!/bin/bash
+POSITIONAL=()
 set -e
 
 function usage() {
@@ -15,9 +16,11 @@ pyexec="python3 --version"
 cmexec="ls /mnt"
 inname="keras"
 
-while true;
+while [[ $# -gt 0 ]]
 do
-    case "$1" in
+    cmd="$1"
+    echo $cmd
+    case $cmd in
         -p|--python)
             cmd="python"
             pyexec="python3 $2"
@@ -26,11 +29,9 @@ do
             break
             ;;
         -b|--bind)
-            cmd=' '
             bpath="$2"
             shift
             shift
-            break
             ;;
         -c|--command)
             cmd="cmd" 
@@ -48,28 +49,29 @@ do
             shift
             break
             ;;
-        *)
-            usage
-            exit 1
+        *)    # unknown option
+            POSITIONAL+=("$1") # save it in an array for later
+            shift # past argument
             ;;
     esac
 done
+
+set -- "${POSITIONAL[@]}" # restore positional parameters
 
 export KERAS_BACKEND="$keras_backend"
 
 # create directory for mount
 mkdir -p ${HOME}/data/${bpath}
 
-echo "$1"
-case "$cmd" in
+case $cmd in
     python) 
-            ${singularity} exec --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${keras_img} ${pyexec}
+        ${singularity} exec --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${keras_img} ${pyexec}
         ;;
     cmd)
-            ${singularity} exec --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${keras_img} ${cmexec}
+        ${singularity} exec --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${keras_img} ${cmexec}
         ;;
     shell)
-            ${singularity} shell --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${keras_img} 
+        ${singularity} shell --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${keras_img} 
         ;;
     help)
         usage
