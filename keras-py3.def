@@ -50,7 +50,7 @@ python3 -m pip install geopy pytz chardet networkx folium geopandas
 # images
 python3 -m pip install Pillow 
 # web
-python3 -m pip install selenium requests
+python3 -m pip install selenium requests zipfile
 
 # create some generic mount points
 mkdir -p /mnt/data /mnt/input /mnt/output /mnt/ref /mnt/code /mnt/work
