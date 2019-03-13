@@ -19,7 +19,6 @@ inname="keras"
 while [[ $# -gt 0 ]]
 do
     cmd="$1"
-    echo $cmd
     case $cmd in
         -p|--python)
             cmd="python"
