@@ -37,11 +37,20 @@ dpkg-reconfigure tzdata
 
 # python
 pip3 install --upgrade pip
-python3 -m pip install tensorflow-gpu
-python3 -m pip install keras
-python3 -m pip install Pillow scikit-learn pandas numpy scipy h5py matplotlib notebook ipython
+# basic numerical tools
+python3 -m pip install numpy scipy matplotlib 
+# machine learning libraries
+python3 -m pip install tensorflow-gpu scikit-learn  keras
+# jupyter notebook
+python3 -m pip install notebook ipython
+# IO
+python3 -m pip install openpyxl h5py pandas tables
+# geodata
 python3 -m pip install geopy pytz chardet networkx folium geopandas
-python3 -m pip install openpyxl selenium requests
+# images
+python3 -m pip install Pillow 
+# web
+python3 -m pip install selenium requests
 
 # create some generic mount points
 mkdir -p /mnt/data /mnt/input /mnt/output /mnt/ref /mnt/code /mnt/work
