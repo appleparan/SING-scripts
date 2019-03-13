@@ -13,6 +13,8 @@ MAINTAINER Jongsu Kim
 %environment
 #---------------------------------------------------------------------
 export PATH=/bin:/usr/bin:/usr/local/bin:/usr/local/cuda/bin:
+sudo locale-gen en_US.UTF-8
+dpkg-reconfigure locales
 export LC_ALL=en_US.UTF8
 
 #---------------------------------------------------------------------
