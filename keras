@@ -1,63 +1,50 @@
-#! /bin/zsh
-#U .TH keras 1
-#U .SH NAME
-#U keras \- simple wrapper around a keras singularity container
-#U .SH SYNOPSIS
-#U .B keras
-#U [-B bindpath] command [command options]
-#U .SH DESCRIPTION
-#U .B keras
-#U is a convenience wrapper around a singularity container
-#U with keras and tensorflow-gpu. Note that it will only
-#U work on machines with CUDA installed (i.e. GPU nodes).
-#U [options] are passed on to the command. Note that, only
-#U the tensorflow backend is available. -B is a bindpath
-#U string passed to singularity
-#U .SH COMMANDS
-#U .IP help 12
-#U display this help message
-#U .IP ipython 12
-#U Start an interactive ipython session
-#U .IP notebook 12
-#U Start a jupyter notebook.
-#U .IP python 12
-#U Used for running batch python scripts
-#U .IP shell 12
-#U get a bash shell inside the container
-#U .SH EXAMPLES
-#U .B keras
-#U ipython
-#U .P
-#U .B keras
-#U python example.py
-#U .P
-#U .B keras
-#U notebook
-#U .SH AUTHOR
-#U Wolfgang Resch. Contact staff@helix.nih.gov for help.
-
+#!/bin/bash
 set -e
 
 function usage() {
-    grep '^#U ' "${BASH_SOURCE[0]}" \
-        | cut -c4- \
-        | groff -Tascii -man \
-        | less -e
+    #TODO : rewrite Usage
+    printf 'Usage: keras [-b/--bind dirname] [-s/--shell] [-p/--python filename] [-c commands] \n'
 }
 
-keras_img="/opt/singularity/keras-jskim.img"
+singularity="/usr/local/bin/singularity"
+keras_img="/opt/singularity/keras-jskim.sif"
 keras_backend="tensorflow"
 cmd="help"
+bpath="run"
+pyexec="python3 --version"
+cmexec="ls /mnt"
+inname="keras"
 
-while true; do
+while true;
+do
     case "$1" in
-        python)
+        -p|--python)
             cmd="python"
+            pyexec="python3 $2"
+            shift
             shift
             break
             ;;
-        shell)
-            cmd="shell"
+        -b|--bind)
+            cmd=' '
+            bpath="$2"
+            shift
+            shift
+            break
+            ;;
+        -c|--command)
+            cmd="cmd" 
+            shift
+            cmexec="$@"
+            break
+            ;;
+        -s|--shell)
+            cmd="shell" 
+            shift
+            break
+            ;;
+        -h|--help)
+            cmd="help"
             shift
             break
             ;;
@@ -70,18 +57,19 @@ done
 
 export KERAS_BACKEND="$keras_backend"
 
+# create directory for mount
+mkdir -p ${HOME}/data/${bpath}
+
+echo "$1"
 case "$cmd" in
-    python)
-        if [ "$1" != "" ]
-        then
-            singularity exec --bind ${HOME}/input:/input,${HOME}/data/"$1":/mnt --nv "${keras_img}" python3 "$@"
-        fi
+    python) 
+            ${singularity} exec --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${keras_img} ${pyexec}
+        ;;
+    cmd)
+            ${singularity} exec --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${keras_img} ${cmexec}
         ;;
     shell)
-        if [ "$1" != "" ]
-        then 
-            singularity exec --bind ${HOME}/input:/input,${HOME}/data/"$1":/mnt --nv "${keras_img}" ls /mnt/
-        fi
+            ${singularity} shell --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${keras_img} 
         ;;
     help)
         usage
