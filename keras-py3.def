@@ -13,9 +13,14 @@ MAINTAINER Jongsu Kim
 %environment
 #---------------------------------------------------------------------
 export PATH=/bin:/usr/bin:/usr/local/bin:/usr/local/cuda/bin:
-sudo locale-gen en_US.UTF-8
-dpkg-reconfigure locales
-export LC_ALL=en_US.UTF8
+echo "LC_ALL=en_US.UTF-8" >> /etc/environment
+echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+echo "LANG=en_US.UTF-8" > /etc/locale.conf
+locale-gen en_US.UTF-8
+
+export TZ="Asia/Seoul"
+ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime 
+echo ${TZ} > /etc/timezone 
 
 #---------------------------------------------------------------------
 %post
