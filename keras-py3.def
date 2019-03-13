@@ -21,14 +21,14 @@ export PATH=/bin:/usr/bin:/usr/local/bin:/usr/local/cuda/bin:
 echo "LC_ALL=en_US.UTF-8" >> /etc/environment
 echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
 echo "LANG=en_US.UTF-8" > /etc/locale.conf
-locale-gen en_US.UTF-8
-dpkg-reconfigure locales
+/usr/sbin/locale-gen en_US.UTF-8
+/usr/sbin/dpkg-reconfigure locales
 
 # TZ
 export TZ="Asia/Seoul"
 ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime 
 echo ${TZ} > /etc/timezone 
-dpkg-reconfigure tz-data
+/usr/sbin/dpkg-reconfigure tz-data
 
 # pkg
 apt-get update 
