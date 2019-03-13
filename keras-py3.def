@@ -17,23 +17,23 @@ export PATH=/bin:/usr/bin:/usr/local/bin:/usr/local/cuda/bin:
 #---------------------------------------------------------------------
 %post
 #---------------------------------------------------------------------
-# locales
+# pkg
+apt-get update 
+apt-get install -y libhdf5-dev locales python3-dev python3-pip python3-tk
+apt-get clean
+
+t # locales
 echo "LC_ALL=en_US.UTF-8" >> /etc/environment
 echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
 echo "LANG=en_US.UTF-8" > /etc/locale.conf
-/usr/sbin/locale-gen en_US.UTF-8
-/usr/sbin/dpkg-reconfigure locales
+locale-gen en_US.UTF-8
+dpkg-reconfigure locales
 
 # TZ
 export TZ="Asia/Seoul"
 ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime 
 echo ${TZ} > /etc/timezone 
-/usr/sbin/dpkg-reconfigure tz-data
-
-# pkg
-apt-get update 
-apt-get install -y libhdf5-dev locales python3-dev python3-pip python3-tk
-apt-get clean
+dpkg-reconfigure tz-data
 
 # python
 pip3 install --upgrade pip
