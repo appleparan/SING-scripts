@@ -22,6 +22,9 @@ export TZ="Asia/Seoul"
 ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime 
 echo ${TZ} > /etc/timezone 
 
+dpkg-reconfigure tz-data
+dpkg-reconfigure locales
+
 #---------------------------------------------------------------------
 %post
 #---------------------------------------------------------------------
