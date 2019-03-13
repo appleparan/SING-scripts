@@ -3,7 +3,7 @@ Simple singularity recipe for keras (personal use)
 
 # How to build
 ```
-$ sudo singularity build keras.img keras-py3.def
+$ sudo singularity build /opt/singularity/keras-jskim.sif keras-py3.def
 ```
 
 # How to run singularity with bind option
