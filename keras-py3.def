@@ -35,6 +35,8 @@ ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime
 echo ${TZ} > /etc/timezone 
 dpkg-reconfigure tzdata
 
+export HDF5_DIR=/usr/lib/x86_64-linux-gnu/hdf5/serial/
+
 # python
 pip3 install --upgrade pip
 # basic numerical tools
