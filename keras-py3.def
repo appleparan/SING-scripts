@@ -57,6 +57,8 @@ python3 -m pip install geopy pytz chardet networkx folium geopandas
 python3 -m pip install Pillow 
 # web
 python3 -m pip install selenium requests
+# test
+python3 -m pip install tox pytest coverage
 
 # create some generic mount points
 mkdir -p /mnt/data /mnt/input /mnt/output /mnt/ref /mnt/code /mnt/work
