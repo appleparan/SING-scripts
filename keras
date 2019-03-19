@@ -32,12 +32,6 @@ do
             cmexec="$@"
             break
             ;;
-        -t|--test)
-            cmd="coverage"
-            toxexec="coverage"
-            shift
-            break
-            ;;
         -p|--python)
             cmd="python"
             pyexec="python3 $2"
