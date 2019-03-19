@@ -21,19 +21,6 @@ while [[ $# -gt 0 ]]
 do
     cmd="$1"
     case $cmd in
-        -p|--python)
-            cmd="python"
-            pyexec="python3 $2"
-            shift
-            shift
-            break
-            ;;
-        -t|--test)
-            cmd="test"
-            toxexec="tox"
-            shift
-            break
-            ;;
         -b|--bind)
             bpath="$2"
             shift
@@ -45,8 +32,27 @@ do
             cmexec="$@"
             break
             ;;
+        -t|--test)
+            cmd="coverage"
+            toxexec="coverage"
+            shift
+            break
+            ;;
+        -p|--python)
+            cmd="python"
+            pyexec="python3 $2"
+            shift
+            shift
+            break
+            ;;
         -s|--shell)
             cmd="shell" 
+            shift
+            break
+            ;;
+        -t|--test)
+            cmd="test"
+            toxexec="tox"
             shift
             break
             ;;
@@ -70,17 +76,17 @@ export KERAS_BACKEND="$keras_backend"
 mkdir -p ${HOME}/data/${bpath}
 
 case $cmd in
-    python) 
-        ${singularity} exec --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${keras_img} ${pyexec}
-        ;;
-    test) 
-        ${singularity} exec --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${keras_img} ${toxexec}
-        ;;
     cmd)
         ${singularity} exec --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${keras_img} ${cmexec}
         ;;
+    python) 
+        ${singularity} exec --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${keras_img} ${pyexec}
+        ;;
     shell)
         ${singularity} shell --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${keras_img} 
+        ;;
+    test) 
+        ${singularity} exec --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${keras_img} ${toxexec}
         ;;
     help)
         usage
