@@ -33,7 +33,7 @@ do
             ;;
         -j|--julia)
             cmd="julia"
-            pyexec="julia $2"
+            jlexec="julia $2"
             shift
             shift
             break
@@ -68,16 +68,16 @@ mkdir -p ${HOME}/data/${bpath}
 
 case $cmd in
     cmd)
-        ${singularity} exec --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${keras_img} ${cmexec}
+        ${singularity} exec --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${flux_img} ${cmexec}
         ;;
     julia) 
-        ${singularity} exec --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${keras_img} ${jlexec}
+        ${singularity} exec --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${flux_img} ${jlexec}
         ;;
     shell)
-        ${singularity} shell --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${keras_img} 
+        ${singularity} shell --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${flux_img} 
         ;;
     test) 
-        ${singularity} exec --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${keras_img} ${toxexec}
+        ${singularity} exec --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${flux_img} ${toxexec}
         ;;
     help)
         usage
