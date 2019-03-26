@@ -24,6 +24,7 @@ export DEBIAN_FRONTEND=noninteractive
 export JULIA_PATH=/usr/local/julia
 export PATH=$JULIA_PATH/bin:$PATH
 export JULIA_GPG=3673DF529D9049477F76B37566E3C7DC03D6E495
+export JULIA_VERSION=1.1.0
 
 # pkg
 apt-get update 
