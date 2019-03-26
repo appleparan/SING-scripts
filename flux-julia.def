@@ -98,7 +98,7 @@ export HDF5_DIR=/usr/lib/x86_64-linux-gnu/hdf5/serial/
 	julia --version
 
 # install Julia pkgs
-julia -e 'using Pkg; Pkg.add.(["CuArrays.jl", "Flux.jl", "DataFrames.jl", "HDF5.jl", "CSV.jl", "PyPlot.jl"])'
+julia -e 'using Pkg; Pkg.add(["CuArrays", "Flux", "DataFrames", "HDF5", "CSV", "PyPlot"])'
 
 # create some generic mount points
 mkdir -p /mnt/data /mnt/input /mnt/output /mnt/ref /mnt/code /mnt/work
