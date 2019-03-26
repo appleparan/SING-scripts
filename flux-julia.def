@@ -26,7 +26,15 @@ export PATH=$JULIA_PATH/bin:$PATH
 export JULIA_GPG=3673DF529D9049477F76B37566E3C7DC03D6E495
 export JULIA_VERSION=1.1.0
 
-# pkg
+# apt packages
+# select mirror
+apt-get update 
+apt-get install -y --no-install-recommends python3-dev python3-pip
+pip3 install setuptools
+pip3 install apt-mirror-updater
+apt-mirror-updater --auto-change-mirror
+
+# update
 apt-get update 
 apt-get install -y --no-install-recommends locales tzdata
 apt-get install -y --no-install-recommends chromium-browser libhdf5-dev 
@@ -81,7 +89,7 @@ export HDF5_DIR=/usr/lib/x86_64-linux-gnu/hdf5/serial/
 	echo "${sha256} *julia.tar.gz" | sha256sum -c -; \
 	\
 	export GNUPGHOME="$(mktemp -d)"; \
-	gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys "$JULIA_GPG"; \
+	gpg --batch --keyserver ipv4.pool.sks-keyservers.net --recv-keys "$JULIA_GPG"; \
 	gpg --batch --verify julia.tar.gz.asc julia.tar.gz; \
 	command -v gpgconf > /dev/null && gpgconf --kill all; \
 	rm -rf "$GNUPGHOME" julia.tar.gz.asc; \
@@ -98,7 +106,15 @@ export HDF5_DIR=/usr/lib/x86_64-linux-gnu/hdf5/serial/
 	julia --version
 
 # install Julia pkgs
-julia -e 'using Pkg; Pkg.add(["CuArrays", "Flux", "DataFrames", "HDF5", "CSV", "PyPlot"])'
+# do not install anyting in Julia at build step, due to ~/.julia will do everything
+#julia -E "using Pkg; \
+#    Pkg.update(); \
+#    Pkg.add(\"CuArrays\"); \
+#    Pkg.add(\"Flux\"); \
+#    Pkg.add(\"DataFrames\"); \
+#    Pkg.add(\"HDF5\"); \
+#    Pkg.add(\"CSV\"); \
+#    Pkg.add(\"PyPlot\");"
 
 # create some generic mount points
 mkdir -p /mnt/data /mnt/input /mnt/output /mnt/ref /mnt/code /mnt/work
