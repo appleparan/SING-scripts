@@ -27,8 +27,8 @@ export JULIA_GPG=3673DF529D9049477F76B37566E3C7DC03D6E495
 
 # pkg
 apt-get update 
-apt-get install -y --no-install-recommends libhdf5-dev locales
-apt-get install -y --no-install-recommends chromium-browser 
+apt-get install -y --no-install-recommends locales tzdata
+apt-get install -y --no-install-recommends chromium-browser libhdf5-dev 
 apt-get install -y --no-install-recommends ca-certificates curl
 
 set -eux; \
