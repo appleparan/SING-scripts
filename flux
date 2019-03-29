@@ -33,7 +33,7 @@ do
             ;;
         -j|--julia)
             cmd="julia"
-            jlexec="julia $2"
+            jlexec="julia --project $2"
             shift
             shift
             break
