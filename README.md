@@ -1,29 +1,51 @@
 # singularity-py-and-jl
-Simple singularity recipe for Keras(python3) & Flux(julia) (personal use)
+Simple singularity recipe for Keras (Python 3) & Flux (Julia) (personal use)
+Base image: nvidia/cuda + julia at Dockerhub
 
 # How to build 
+
 ## Keras
 ```
-$ sudo singularity build /opt/singularity/keras-mine.sif keras-py3.def
+$ sudo singularity build /opt/singularity/keras-jskim.sif keras-py3.def
 ```
 
 ## Flux
 ```
-$ sudo singularity build /opt/singularity/flux-mine.sif flux-julia.def
+$ sudo singularity build /opt/singularity/flux-jskim.sif flux-julia.def
+```
+
+## Setting up Julia
+```
+$ julia
+```
+
+* press `]`
+
+```
+(v1.1) pkg> up
 ```
 
 # How to setup executable files 
+
+* If you have changed sif file name, change corresponding name in `keras` and `flux` script
+
+## add files to your home directory
+
 ```
 $ mkdir -p ~/usr/bin
-$ cp keras ~/usr/bin
-$ cp flux ~/usr/bin
 $ chmod +x keras
 $ chmod +x flux
+$ cp keras ~/usr/bin
+$ cp flux ~/usr/bin
 ```
 
-* Assume `~/usr/bin` has been add to your PATH
+or you can make symbolic link (`ln -s src dest` to your `bin` directory)
 
-# How to run script in singularity with output directory (${HOME}/data/'output')
+* Assume `~/usr/bin` has been added to your PATH
+
+# How to run script in singularity 
+
+* assume we have `some_case_name` and save code results to `${HOME}/data/some_case_name`
 
 ## Keras
 
@@ -37,8 +59,30 @@ $ keras -b some_case_name my_code.py
 $ flux -b some_case_name my_code.jl
 ```
 
+# How to access shell inside singularity image
+
+## Keras (Python 3)
+
+```
+$ keras -s
+```
+
+## Flux (Julia)
+
+```
+$ flux -s
+```
+
+# Important Things
+
+1. Use envionments in `Pkg` because host and guest system share `~/.julia` so there would be build issue
+    * Link : https://julialang.github.io/Pkg.jl/v1/environments/#Creating-your-own-projects-1
+
+2. Shell script may not be work in specific order. 
+
 # TODO
 
-1. better docs
-2. better usage (`-h` option)
+1. Better docs
+2. Better usage (`-h` option)
+3. Better command line arguments handling in shell script
 
