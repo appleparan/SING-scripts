@@ -13,9 +13,13 @@ MAINTAINER Jongsu Kim
 #---------------------------------------------------------------------
 %environment
 #---------------------------------------------------------------------
-export PATH=/bin:/usr/bin:/usr/local/bin:/usr/local/cuda/bin
+export PATH=/bin:/usr/bin:/usr/local/bin
 export JULIA_PATH=/usr/local/julia
+export JULIA_BINDIR=$JULIA_PATH/bin
 export PATH=$JULIA_PATH/bin:$PATH
+export CUDA_PATH=/usr/local/cuda
+export PATH=$CUDA_PATH/bin:$PATH
+export LD_LIBRARY_PATH=$CUDA_PATH/lib64:$CUDA_PATH/compat:/usr/lib/x86_64-linux-gnu:/lib:/lib64
 
 #---------------------------------------------------------------------
 %post
