@@ -71,16 +71,16 @@ mkdir -p ${HOME}/data/${bpath}
 
 case $cmd in
     cmd)
-        ${singularity} exec --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${keras_img} ${cmexec}
+        ${singularity} exec --nv --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${keras_img} ${cmexec}
         ;;
     python) 
-        ${singularity} exec --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${keras_img} ${pyexec}
+        ${singularity} exec --nv --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${keras_img} ${pyexec}
         ;;
     shell)
-        ${singularity} shell --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${keras_img} 
+        ${singularity} shell --nv --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${keras_img} 
         ;;
     test) 
-        ${singularity} exec --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${keras_img} ${toxexec}
+        ${singularity} exec --nv --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${keras_img} ${toxexec}
         ;;
     help)
         usage

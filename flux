@@ -68,16 +68,16 @@ mkdir -p ${HOME}/data/${bpath}
 
 case $cmd in
     cmd)
-        ${singularity} exec --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${flux_img} ${cmexec}
+        ${singularity} exec --nv --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${flux_img} ${cmexec}
         ;;
     julia) 
-        ${singularity} exec --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${flux_img} ${jlexec}
+        ${singularity} exec --nv --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${flux_img} ${jlexec}
         ;;
     shell)
-        ${singularity} shell --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${flux_img} 
+        ${singularity} shell --nv --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${flux_img} 
         ;;
     test) 
-        ${singularity} exec --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${flux_img} ${toxexec}
+        ${singularity} exec --nv --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${flux_img} ${toxexec}
         ;;
     help)
         usage
