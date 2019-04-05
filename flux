@@ -11,7 +11,7 @@ singularity="/usr/local/bin/singularity"
 flux_img="/opt/singularity/flux-jskim.sif"
 cmd="help"
 bpath="run"
-jlexec="julia --version"
+jlexec=("julia" " --version")
 testexec=("julia" " --color=yes --project -E " "using Pkg; Pkg.activate(); Pkg.instantiate(); Pkg.test()")
 cmexec="ls /mnt"
 
@@ -32,7 +32,7 @@ do
             ;;
         -j|--julia)
             cmd="julia"
-            jlexec="julia --project $2"
+            jlexec=("julia" " --project " "$2")
             shift
             shift
             break
@@ -69,7 +69,7 @@ case $cmd in
         ${singularity} exec --nv --bind "${HOME}"/input:/input,"${HOME}"/data/"${bpath}":/mnt ${flux_img} "${cmexec}"
         ;;
     julia) 
-        ${singularity} exec --nv --bind "${HOME}"/input:/input,"${HOME}"/data/"${bpath}":/mnt ${flux_img} "${jlexec}"
+        ${singularity} exec --nv --bind "${HOME}"/input:/input,"${HOME}"/data/"${bpath}":/mnt ${flux_img} ${jlexec[0]} ${jlexec[1]} "${jlexec[2]}"
         ;;
     shell)
         ${singularity} shell --nv --bind "${HOME}"/input:/input,"${HOME}"/data/"${bpath}":/mnt ${flux_img} 
