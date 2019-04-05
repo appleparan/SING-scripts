@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 POSITIONAL=()
 set -e
 
@@ -15,7 +15,6 @@ bpath="run"
 pyexec="python3 --version"
 toxexec="tox"
 cmexec="ls /mnt"
-inname="keras"
 
 while [[ $# -gt 0 ]]
 do
@@ -29,7 +28,7 @@ do
         -c|--command)
             cmd="cmd" 
             shift
-            cmexec="$@"
+            cmexec="$*"
             break
             ;;
         -p|--python)
@@ -67,20 +66,20 @@ set -- "${POSITIONAL[@]}" # restore positional parameters
 export KERAS_BACKEND="$keras_backend"
 
 # create directory for mount
-mkdir -p ${HOME}/data/${bpath}
+mkdir -p "${HOME}"/data/"${bpath}"
 
 case $cmd in
     cmd)
-        ${singularity} exec --nv --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${keras_img} ${cmexec}
+        ${singularity} exec --nv --bind "${HOME}"/input:/input,"${HOME}"/data/"${bpath}":/mnt --nv ${keras_img} "${cmexec}"
         ;;
     python) 
-        ${singularity} exec --nv --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${keras_img} ${pyexec}
+        ${singularity} exec --nv --bind "${HOME}"/input:/input,"${HOME}"/data/"${bpath}":/mnt --nv ${keras_img} "${pyexec}"
         ;;
     shell)
-        ${singularity} shell --nv --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${keras_img} 
+        ${singularity} shell --nv --bind "${HOME}"/input:/input,"${HOME}"/data/"${bpath}":/mnt --nv ${keras_img} 
         ;;
     test) 
-        ${singularity} exec --nv --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${keras_img} ${toxexec}
+        ${singularity} exec --nv --bind "${HOME}"/input:/input,"${HOME}"/data/"${bpath}":/mnt --nv ${keras_img} "${toxexec}"
         ;;
     help)
         usage
