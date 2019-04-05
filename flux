@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 POSITIONAL=()
 set -e
 
@@ -12,9 +12,8 @@ flux_img="/opt/singularity/flux-jskim.sif"
 cmd="help"
 bpath="run"
 jlexec="julia --version"
-toxexec="tox"
+testexec=("julia" " --color=yes --project -E " "using Pkg; Pkg.activate(); Pkg.instantiate(); Pkg.test()")
 cmexec="ls /mnt"
-inname="flux"
 
 while [[ $# -gt 0 ]]
 do
@@ -28,7 +27,7 @@ do
         -c|--command)
             cmd="cmd" 
             shift
-            cmexec="$@"
+            cmexec="$*"
             break
             ;;
         -j|--julia)
@@ -45,7 +44,6 @@ do
             ;;
         -t|--test)
             cmd="test"
-            toxexec="tox"
             shift
             break
             ;;
@@ -64,20 +62,20 @@ done
 set -- "${POSITIONAL[@]}" # restore positional parameters
 
 # create directory for mount
-mkdir -p ${HOME}/data/${bpath}
+mkdir -p "${HOME}"/data/"${bpath}"
 
 case $cmd in
     cmd)
-        ${singularity} exec --nv --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${flux_img} ${cmexec}
+        ${singularity} exec --nv --bind "${HOME}"/input:/input,"${HOME}"/data/"${bpath}":/mnt ${flux_img} "${cmexec}"
         ;;
     julia) 
-        ${singularity} exec --nv --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${flux_img} ${jlexec}
+        ${singularity} exec --nv --bind "${HOME}"/input:/input,"${HOME}"/data/"${bpath}":/mnt ${flux_img} "${jlexec}"
         ;;
     shell)
-        ${singularity} shell --nv --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${flux_img} 
+        ${singularity} shell --nv --bind "${HOME}"/input:/input,"${HOME}"/data/"${bpath}":/mnt ${flux_img} 
         ;;
     test) 
-        ${singularity} exec --nv --bind ${HOME}/input:/input,${HOME}/data/${bpath}:/mnt --nv ${flux_img} ${toxexec}
+        ${singularity} exec --bind "${HOME}"/input:/input,"${HOME}"/data/"${bpath}":/mnt --nv ${flux_img} ${testexec[0]} ${testexec[1]} "${testexec[2]}"
         ;;
     help)
         usage
