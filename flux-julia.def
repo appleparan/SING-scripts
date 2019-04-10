@@ -44,6 +44,8 @@ apt-get update
 apt-get install -y --no-install-recommends locales tzdata
 apt-get install -y --no-install-recommends ca-certificates curl
 apt-get install -y --no-install-recommends libhdf5-dev hdf5-tools
+# for GR.jl
+apt-get install libxt6 libxrender1 libxext6 libgl1-mesa-glx libqt5widgets5
 python3 -m pip install numpy scipy matplotlib 
 
 set -eux; \
