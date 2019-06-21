@@ -11,6 +11,7 @@ singularity="/usr/local/bin/singularity"
 flux_img="/opt/singularity/flux-jskim.sif"
 cmd="help"
 bpath="run"
+npath="/home/appleparan/src/"
 jlexec=("julia" " --version")
 testexec=("julia" " --color=yes --project -E " "using Pkg; Pkg.activate(); Pkg.instantiate(); Pkg.test()")
 cmexec="ls /mnt"
@@ -36,6 +37,12 @@ do
             shift
             shift
             break
+            ;;
+        -n|--notebook)
+            cmd="notebook"
+            npath="$2"
+            shift
+            shift
             ;;
         -s|--shell)
             cmd="shell" 
@@ -70,6 +77,9 @@ case $cmd in
         ;;
     julia) 
         ${singularity} exec --nv --bind "${HOME}"/input:/input,"${HOME}"/data/"${bpath}":/mnt ${flux_img} ${jlexec[0]} ${jlexec[1]} "${jlexec[2]}"
+        ;;
+    notebook)
+        ${singularity} exec --nv --bind "${HOME}"/input:/input,"${HOME}"/data/"${bpath}":/mnt,"${npath}":/notebook ${flux_img} jupyter notebook --no-browser --port=8889 &
         ;;
     shell)
         ${singularity} shell --nv --bind "${HOME}"/input:/input,"${HOME}"/data/"${bpath}":/mnt ${flux_img} 
