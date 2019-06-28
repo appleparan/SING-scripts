@@ -11,7 +11,7 @@ singularity="/usr/local/bin/singularity"
 flux_img="/opt/singularity/flux-jskim.sif"
 cmd="help"
 bpath="run"
-npath="/home/appleparan/src/"
+npath="/mnt/"
 jlexec=("julia" " --version")
 testexec=("julia" " --color=yes --project -E " "using Pkg; Pkg.activate(); Pkg.instantiate(); Pkg.test()")
 cmexec="ls /mnt"
@@ -40,9 +40,8 @@ do
             ;;
         -n|--notebook)
             cmd="notebook"
-            npath="$2"
             shift
-            shift
+            break
             ;;
         -s|--shell)
             cmd="shell" 
@@ -79,7 +78,8 @@ case $cmd in
         ${singularity} exec --nv --bind "${HOME}"/input:/input,"${HOME}"/data/"${bpath}":/mnt ${flux_img} ${jlexec[0]} ${jlexec[1]} "${jlexec[2]}"
         ;;
     notebook)
-        ${singularity} exec --nv --bind "${HOME}"/input:/input,"${HOME}"/data/"${bpath}":/mnt,"${npath}":/notebook ${flux_img} jupyter notebook --no-browser --port=8889 &
+        ${singularity} exec --nv --bind "${HOME}"/input:/input,"${HOME}"/data/"${bpath}":/mnt ${flux_img} /usr/bin/nohup "/usr/local/bin/jupyter" notebook --port=8889 --no-browser &> jupyter.log 2>&1 &
+        # connect local machine via SSH tunneling ssh remoteid@remoteIP -p remoteSSHPort -NL 8157:localhost:8889 remoteid@remoteIP, then open web browser localhost:8157
         ;;
     shell)
         ${singularity} shell --nv --bind "${HOME}"/input:/input,"${HOME}"/data/"${bpath}":/mnt ${flux_img} 
