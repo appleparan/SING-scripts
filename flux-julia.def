@@ -48,7 +48,9 @@ apt-get install -y --no-install-recommends libhdf5-dev hdf5-tools
 apt-get install -y --no-install-recommends libxt6 libxrender1 libxext6 libgl1-mesa-glx libqt5widgets5 xvfb
 python3 -m pip install numpy scipy matplotlib 
 python3 -m pip install xlrd
-python3 -m pip install jupyper
+
+# jupyter
+python3 -m pip install jupyter
 
 set -eux; \
 	savedAptMark="$(apt-mark showmanual)"; \

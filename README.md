@@ -80,6 +80,16 @@ $ flux -s
 
 2. Shell script may not be work in specific order. 
 
+
+# Jupyter & Flux
+
+* run following command
+```
+    flux -b "name" -n
+```
+
+* connect local machine via SSH tunneling ssh remoteid@remoteIP -p remoteSSHPort -NL 8157:localhost:8889 remoteid@remoteIP, then open web browser localhost:8157
+
 # TODO
 
 1. Better docs
