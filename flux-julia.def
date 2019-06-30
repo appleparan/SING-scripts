@@ -28,7 +28,7 @@ export DEBIAN_FRONTEND=noninteractive
 export JULIA_PATH=/usr/local/julia
 export PATH=$JULIA_PATH/bin:$PATH
 export JULIA_GPG=3673DF529D9049477F76B37566E3C7DC03D6E495
-export JULIA_VERSION=1.1.0
+export JULIA_VERSION=1.1.1
 
 # apt packages
 # select mirror
@@ -37,7 +37,8 @@ apt-get install -y --no-install-recommends python3-dev python3-pip python3-setup
 pip3 install --upgrade pip 
 python3 -m pip install --upgrade setuptools wheel
 python3 -m pip install apt-mirror-updater
-apt-mirror-updater --auto-change-mirror
+# disable mirror selector
+# apt-mirror-updater --auto-change-mirror
 
 # update and install packages
 apt-get update 
@@ -51,6 +52,15 @@ python3 -m pip install xlrd
 
 # jupyter
 python3 -m pip install jupyter
+
+# install node & IJavascript
+apt-get install -y curl
+curl -sL https://deb.nodesource.com/setup_10.x | bash -
+apt-get install -y nodejs
+npm install -g ijavascript
+npm install -g requirejs
+npm install -g plotly.js-dist d3
+ijsinstall
 
 set -eux; \
 	savedAptMark="$(apt-mark showmanual)"; \
