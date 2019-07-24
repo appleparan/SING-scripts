@@ -88,7 +88,10 @@ $ flux -s
     flux -b "name" -n
 ```
 
-* connect local machine via SSH tunneling ssh remoteid@remoteIP -p remoteSSHPort -NL 8157:localhost:8889 remoteid@remoteIP, then open web browser localhost:8157
+* connect local machine via SSH tunneling using following command, then open web browser by this address, localhost:8157`.
+```
+ssh "remoteId"@"remoteIP" -p "remoteSSHPort" -NL 8157:localhost:8889 "remoteId"@"remoteIP"
+```
 
 # TODO
 
