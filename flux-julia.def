@@ -47,22 +47,23 @@ apt-get install -y --no-install-recommends ca-certificates curl
 apt-get install -y --no-install-recommends libhdf5-dev hdf5-tools
 # for GR.jl
 apt-get install -y --no-install-recommends libxt6 libxrender1 libxext6 libgl1-mesa-glx libqt5widgets5 xvfb
-python3 -m pip install numpy scipy matplotlib 
+python3 -m pip install numpy scipy matplotlib  sympy
 python3 -m pip install xlrd
 
 # Install nanum gothic
-apt-get install -y fonts-nanum fonts-nanum-coding fonts-nanum-extra
+apt-get install -y fonts-nanum fonts-nanum-coding fonts-nanum-extra 
+apt-get install -y fonts-noto*
 apt-get install -y fonts-lexi-saebom
 
 # jupyter
-python3 -m pip install jupyter
+python3 -m pip install jupyter rise 
 
 # install node & IJavascript
 apt-get install -y curl
-curl -sL https://deb.nodesource.com/setup_10.x | bash -
-apt-get install -y nodejs
-npm install -g ijavascript
-ijsinstall
+#curl -sL https://deb.nodesource.com/setup_10.x | bash -
+#apt-get install -y nodejs
+#npm install -g ijavascript
+#ijsinstall
 
 set -eux; \
 	savedAptMark="$(apt-mark showmanual)"; \
@@ -115,7 +116,7 @@ export HDF5_DIR=/usr/lib/x86_64-linux-gnu/hdf5/serial/
 	echo "${sha256} *julia.tar.gz" | sha256sum -c -; \
 	\
 	export GNUPGHOME="$(mktemp -d)"; \
-	gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys "$JULIA_GPG"; \
+	gpg --batch --keyserver pool.sks-keyservers.net --recv-keys "$JULIA_GPG"; \
 	gpg --batch --verify julia.tar.gz.asc julia.tar.gz; \
 	command -v gpgconf > /dev/null && gpgconf --kill all; \
 	rm -rf "$GNUPGHOME" julia.tar.gz.asc; \
