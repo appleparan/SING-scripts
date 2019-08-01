@@ -43,7 +43,7 @@ python3 -m pip install apt-mirror-updater
 # update and install packages
 apt-get update 
 apt-get install -y --no-install-recommends locales tzdata
-apt-get install -y --no-install-recommends ca-certificates curl
+apt-get install -y --no-install-recommends ca-certificates curl gnupg dirmngr
 apt-get install -y --no-install-recommends libhdf5-dev hdf5-tools
 # for GR.jl
 apt-get install -y --no-install-recommends libxt6 libxrender1 libxext6 libgl1-mesa-glx libqt5widgets5 xvfb
@@ -52,11 +52,11 @@ python3 -m pip install xlrd
 
 # Install nanum gothic
 apt-get install -y fonts-nanum fonts-nanum-coding fonts-nanum-extra 
-apt-get install -y fonts-noto*
+apt-get install -y fonts-noto fonts-noto-cjk
 apt-get install -y fonts-lexi-saebom
 
 # jupyter
-python3 -m pip install jupyter rise 
+python3 -m pip install jupyter RISE jupyter_contrib_nbextensions
 
 # install node & IJavascript
 apt-get install -y curl
@@ -116,8 +116,8 @@ export HDF5_DIR=/usr/lib/x86_64-linux-gnu/hdf5/serial/
 	echo "${sha256} *julia.tar.gz" | sha256sum -c -; \
 	\
 	export GNUPGHOME="$(mktemp -d)"; \
-	gpg --batch --keyserver pool.sks-keyservers.net --recv-keys "$JULIA_GPG"; \
-	gpg --batch --verify julia.tar.gz.asc julia.tar.gz; \
+	#gpg --batch --keyserver na.pool.sks-keyservers.net --recv-keys "$JULIA_GPG"; \
+	#gpg --batch --verify julia.tar.gz.asc julia.tar.gz; \
 	command -v gpgconf > /dev/null && gpgconf --kill all; \
 	rm -rf "$GNUPGHOME" julia.tar.gz.asc; \
 	\
