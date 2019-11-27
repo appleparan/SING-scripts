@@ -16,10 +16,15 @@ MAINTAINER Jongsu Kim
 export PATH=/bin:/usr/bin:/usr/local/bin
 export JULIA_PATH=/usr/local/julia
 export JULIA_BINDIR=$JULIA_PATH/bin
+export HDF5_DIR=/usr/lib/x86_64-linux-gnu/hdf5/serial/
 export PATH=$JULIA_PATH/bin:$PATH
 export CUDA_PATH=/usr/local/cuda
 export PATH=$CUDA_PATH/bin:$PATH
 export LD_LIBRARY_PATH=$CUDA_PATH/lib64:/usr/lib/x86_64-linux-gnu:/lib:/lib64
+export DISPLAY=:1
+unset XDG_RUNTIME_DIR
+# really quiet, even error
+/usr/bin/X $DISPLAY -quiet > /dev/null 2>&1 &
 
 #---------------------------------------------------------------------
 %post
@@ -36,7 +41,6 @@ export JULIA_VERSION=1.3.0
 apt-get update
 apt-get install -y software-properties-common
 add-apt-repository universe
-add-apt-repository ppa:inkscape.dev/stable
 apt-get update
 apt-get install -y --no-install-recommends python3-dev python3-pip python3-setuptools python3-wheel
 pip3 install --upgrade pip 
@@ -49,33 +53,24 @@ python3 -m pip install apt-mirror-updater
 apt-get update 
 apt-get install -y --no-install-recommends locales tzdata
 apt-get install -y --no-install-recommends ca-certificates curl gnupg dirmngr
+
+# HDF5
 apt-get install -y --no-install-recommends libhdf5-dev hdf5-tools
-# for GR.jl
-apt-get install -y --no-install-recommends libxt6 libxrender1 libxext6 libgl1-mesa-glx libqt5widgets5 qt5-default xvfb
-apt-get install -y --no-install-recommends gettext gettext-base
+
+# Xdummy for headless system
+apt-get install -y xserver-xorg-video-dummy x11-xserver-utils
+
+# Plots.jl dependencies
+curl -fL -o xorg.conf "http://xpra.org/xorg.conf"
+mv xorg.conf /etc/X11/xorg.conf
+apt-get install -y libxt6 libxrender1 libxext6 libgl1-mesa-glx libqt5widgets5
+
+#apt-get install -y --no-install-recommends gettext gettext-base
+#apt-get install -y --no-install-recommends libharfbuzz libharfbuzz-subject libharfbuzz-gobject
 
 # Install korean fonts
 apt-get install -y fonts-nanum fonts-nanum-coding fonts-nanum-extra 
 apt-get install -y fonts-noto fonts-noto-cjk
-#apt-get install -y fonts-lexi-saebom
-
-# install python package
-python3 -m pip install numpy scipy matplotlib sympy
-python3 -m pip install xlrd
-
-# jupyter
-python3 -m pip install jupyter RISE jupyter_contrib_nbextensions
-
-# for video
-apt-get install -y ffmpeg
-apt-get install -y inkscape
-
-# install node & IJavascript
-#apt-get install -y curl
-#curl -sL https://deb.nodesource.com/setup_10.x | bash -
-#apt-get install -y nodejs
-#npm install -g ijavascript
-#ijsinstall
 
 set -eux; \
 	savedAptMark="$(apt-mark showmanual)"; \
@@ -103,8 +98,6 @@ export TZ="Asia/Seoul"
 ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime 
 echo ${TZ} > /etc/timezone 
 dpkg-reconfigure tzdata --frontend noninteractive tzdata
-
-export HDF5_DIR=/usr/lib/x86_64-linux-gnu/hdf5/serial/
 
 # install julia
 # https://julialang.org/downloads/#julia-command-line-version
@@ -148,3 +141,4 @@ export HDF5_DIR=/usr/lib/x86_64-linux-gnu/hdf5/serial/
 
 # create some generic mount points
 mkdir -p /mnt/data /mnt/input /mnt/output /mnt/ref /mnt/code /mnt/work
+
