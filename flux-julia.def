@@ -2,7 +2,7 @@ BootStrap: docker
 From: nvidia/cuda:10.0-cudnn7-devel-ubuntu18.04
 
 %help
-    Julia 1.2 docker image with cuda & cudnn
+    Julia 1.3 docker image with cuda & cudnn
     Julia Dockerfile: https://github.com/docker-library/julia/blob/master/1.1/stretch/Dockerfile
 
 #---------------------------------------------------------------------
@@ -28,7 +28,7 @@ export DEBIAN_FRONTEND=noninteractive
 export JULIA_PATH=/usr/local/julia
 export PATH=$JULIA_PATH/bin:$PATH
 export JULIA_GPG=3673DF529D9049477F76B37566E3C7DC03D6E495
-export JULIA_VERSION=1.2.0
+export JULIA_VERSION=1.3.0
 
 # apt packages
 # select mirror
