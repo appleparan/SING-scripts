@@ -1,0 +1,157 @@
+BootStrap: docker
+From: nvidia/cuda:10.0-cudnn7-devel-ubuntu18.04
+
+%help
+    Julia 1.3 docker image with cuda & cudnn
+    Julia Dockerfile: https://github.com/docker-library/julia/blob/master/1.1/stretch/Dockerfile
+
+#---------------------------------------------------------------------
+%labels
+#---------------------------------------------------------------------
+MAINTAINER Jongsu Kim
+
+#---------------------------------------------------------------------
+%environment
+#---------------------------------------------------------------------
+export PATH=/bin:/usr/bin:/usr/local/bin
+export JULIA_PATH=/usr/local/julia
+export JULIA_BINDIR=$JULIA_PATH/bin
+export HDF5_DIR=/usr/lib/x86_64-linux-gnu/hdf5/serial/
+export PATH=$JULIA_PATH/bin:$PATH
+export CUDA_PATH=/usr/local/cuda
+export PATH=$CUDA_PATH/bin:$PATH
+export LD_LIBRARY_PATH=$CUDA_PATH/lib64:/usr/lib/x86_64-linux-gnu:/lib:/lib64
+export DISPLAY=:1
+unset XDG_RUNTIME_DIR
+/usr/bin/X $DISPLAY -quiet > /dev/null 2>&1 &
+
+#---------------------------------------------------------------------
+%post
+#---------------------------------------------------------------------
+export DEBIAN_FRONTEND=noninteractive
+export JULIA_PATH=/usr/local/julia
+export PATH=$JULIA_PATH/bin:$PATH
+export JULIA_GPG=3673DF529D9049477F76B37566E3C7DC03D6E495
+export JULIA_VERSION=1.3.0
+
+# apt packages
+# select mirror
+
+apt-get update
+apt-get install -y software-properties-common
+add-apt-repository universe
+add-apt-repository ppa:inkscape.dev/stable
+apt-get update
+apt-get install -y --no-install-recommends python3-dev python3-pip python3-setuptools python3-wheel
+pip3 install --upgrade pip 
+python3 -m pip install --upgrade setuptools wheel
+python3 -m pip install apt-mirror-updater
+# disable mirror selector
+# apt-mirror-updater --auto-change-mirror
+
+# update and install packages
+apt-get update 
+apt-get install -y --no-install-recommends locales tzdata
+apt-get install -y --no-install-recommends ca-certificates curl gnupg dirmngr
+
+# HDF5
+apt-get install -y --no-install-recommends libhdf5-dev hdf5-tools
+
+# Xdummy for headless system
+apt-get install -y xserver-xorg-video-dummy
+
+# Plots.jl dependencies
+curl -fL -o xorg.conf "http://xpra.org/xorg.conf"
+mv xorg.conf /etc/X11/xorg.conf
+apt-get install -y libxt6 libxrender1 libxext6 libgl1-mesa-glx libqt5widgets5
+#apt-get install -y --no-install-recommends gettext gettext-base
+#apt-get install -y --no-install-recommends libharfbuzz libharfbuzz-subject libharfbuzz-gobject
+
+# Install korean fonts
+apt-get install -y fonts-nanum fonts-nanum-coding fonts-nanum-extra 
+apt-get install -y fonts-noto fonts-noto-cjk
+
+# install python package
+python3 -m pip install numpy scipy matplotlib sympy
+python3 -m pip install xlrd
+
+# jupyter
+python3 -m pip install jupyter RISE jupyter_contrib_nbextensions
+# install node & IJavascript
+#apt-get install -y curl
+#curl -sL https://deb.nodesource.com/setup_10.x | bash -
+#apt-get install -y nodejs
+#npm install -g ijavascript
+#ijsinstall
+
+set -eux; \
+	savedAptMark="$(apt-mark showmanual)"; \
+	if ! command -v gpg > /dev/null; then \
+		apt-get update; \
+		apt-get install -y --no-install-recommends \
+			gnupg \
+			dirmngr \
+		; \
+		rm -rf /var/lib/apt/lists/*; \
+	fi; \
+apt-get clean
+
+# locales
+locale-gen --purge en_US.UTF-8
+#echo "LC_ALL=en_US.UTF-8" >> /etc/environment
+#echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+#echo "LANG=en_US.UTF-8" > /etc/locale.conf
+#locale-gen en_US.UTF-8
+echo -e 'LANG="en_US.UTF-8"\nLANGUAGE="en_US:en"\n' > /etc/default/locale
+dpkg-reconfigure locales
+
+# TZ
+export TZ="Asia/Seoul"
+ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime 
+echo ${TZ} > /etc/timezone 
+dpkg-reconfigure tzdata --frontend noninteractive tzdata
+
+
+# install julia
+# https://julialang.org/downloads/#julia-command-line-version
+# https://julialang-s3.julialang.org/bin/checksums/julia-1.3.0.sha256
+# this "case" statement is generated via "update.sh"
+	dpkgArch="$(dpkg --print-architecture)"; \
+	case "${dpkgArch##*-}" in \
+# amd64
+        amd64) tarArch='x86_64'; dirArch='x64'; sha256='9ec9e8076f65bef9ba1fb3c58037743c5abb3b53d845b827e44a37e7bcacffe8' ;; \
+# arm32v7
+        armhf) tarArch='armv7l'; dirArch='armv7l'; sha256='7739a318f371250faf10befd5636008fbb84992cc90ee88b3a753b1ad408ad7c' ;; \
+# arm64v8
+        arm64) tarArch='aarch64'; dirArch='aarch64'; sha256='8557c86cb4f65e8d8c2b1da376e759548cb35942a63820a6d20bc1448c45ec1b' ;; \
+# i386
+        i386) tarArch='i686'; dirArch='x86'; sha256='e43339e72b2e71f8df343e6f542bf3a48cbbf7e9c135b076d5d651d9153615c9' ;; \
+        *) echo >&2 "error: current architecture ($dpkgArch) does not have a corresponding Julia binary release"; exit 1 ;; \
+	esac; \
+	\
+	folder="$(echo "$JULIA_VERSION" | cut -d. -f1-2)"; \
+	curl -fL -o julia.tar.gz.asc "https://julialang-s3.julialang.org/bin/linux/${dirArch}/${folder}/julia-${JULIA_VERSION}-linux-${tarArch}.tar.gz.asc"; \
+	curl -fL -o julia.tar.gz     "https://julialang-s3.julialang.org/bin/linux/${dirArch}/${folder}/julia-${JULIA_VERSION}-linux-${tarArch}.tar.gz"; \
+	\
+	echo "${sha256} *julia.tar.gz" | sha256sum -c -; \
+	\
+	export GNUPGHOME="$(mktemp -d)"; \
+	#gpg --batch --keyserver na.pool.sks-keyservers.net --recv-keys "$JULIA_GPG"; \
+	#gpg --batch --verify julia.tar.gz.asc julia.tar.gz; \
+	command -v gpgconf > /dev/null && gpgconf --kill all; \
+	rm -rf "$GNUPGHOME" julia.tar.gz.asc; \
+	\
+	mkdir "$JULIA_PATH"; \
+	tar -xzf julia.tar.gz -C "$JULIA_PATH" --strip-components 1; \
+	rm julia.tar.gz; \
+	\
+	apt-mark auto '.*' > /dev/null; \
+	[ -z "$savedAptMark" ] || apt-mark manual $savedAptMark; \
+	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
+	\
+# smoke test
+	julia --version
+
+# create some generic mount points
+mkdir -p /mnt/data /mnt/input /mnt/output /mnt/ref /mnt/code /mnt/work
+
