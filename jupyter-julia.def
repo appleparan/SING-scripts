@@ -73,7 +73,6 @@ apt-get install -y fonts-noto fonts-noto-cjk
 
 # install python package
 python3 -m pip install numpy scipy matplotlib sympy
-python3 -m pip install xlrd
 
 # jupyter
 python3 -m pip install jupyter RISE jupyter_contrib_nbextensions

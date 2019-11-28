@@ -49,6 +49,9 @@ python3 -m pip install apt-mirror-updater
 # disable mirror selector
 # apt-mirror-updater --auto-change-mirror
 
+# install python package
+python3 -m pip install xlrd
+
 # update and install packages
 apt-get update 
 apt-get install -y --no-install-recommends locales tzdata
