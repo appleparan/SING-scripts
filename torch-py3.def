@@ -16,6 +16,12 @@ export CUDA_PATH=/usr/local/cuda
 export PATH=$CUDA_PATH/bin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 export LD_LIBRARY_PATH=$CUDA_PATH/lib64:/usr/lib/x86_64-linux-gnu:/lib:/lib64
 
+# pyenv
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH=$PYENV_ROOT/bin:$PATH
+if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
+if which pyenv > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
+
 #---------------------------------------------------------------------
 %post
 #---------------------------------------------------------------------
@@ -58,3 +64,4 @@ export HDF5_DIR=/usr/lib/x86_64-linux-gnu/hdf5/serial/
 
 # create some generic mount points
 mkdir -p /mnt/data /mnt/input /mnt/output /mnt/ref /mnt/code /mnt/work
+
