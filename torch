@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+POSITIONAL=()
+set -e
+
+function usage() {
+    #TODO : rewrite Usage
+    printf 'Usage: torch [-b/--bind dirname] [-s/--shell] [-p/--python filename] [-c commands] \n'
+}
+
+singularity="/usr/local/bin/singularity"
+torch_img="/opt/singularity/torch-jskim.sif"
+cmd="help"
+bpath="run"
+pyexec="python3 --version"
+toxexec="tox"
+cmexec="ls /mnt"
+
+while [[ $# -gt 0 ]]
+do
+    cmd="$1"
+    case $cmd in
+        -b|--bind)
+            bpath="$2"
+            shift
+            shift
+            ;;
+        -c|--command)
+            cmd="cmd" 
+            shift
+            cmexec="$*"
+            break
+            ;;
+        -p|--python)
+            cmd="python"
+            pyexec="python3 $2"
+            shift
+            shift
+            break
+            ;;
+        -s|--shell)
+            cmd="shell" 
+            shift
+            break
+            ;;
+        -t|--test)
+            cmd="test"
+            toxexec="tox"
+            shift
+            break
+            ;;
+        -h|--help)
+            cmd="help"
+            shift
+            break
+            ;;
+        *)    # unknown option
+            POSITIONAL+=("$1") # save it in an array for later
+            shift # past argument
+            ;;
+    esac
+done
+
+set -- "${POSITIONAL[@]}" # restore positional parameters
+
+
+# create directory for mount
+mkdir -p "${HOME}"/data/"${bpath}"
+
+case $cmd in
+    cmd)
+        ${singularity} exec --nv --bind "${HOME}"/input:/input,"${HOME}"/data/"${bpath}":/mnt --nv ${torch_img} "${cmexec}"
+        ;;
+    python) 
+        ${singularity} exec --nv --bind "${HOME}"/input:/input,"${HOME}"/data/"${bpath}":/mnt --nv ${torch_img} "${pyexec}"
+        ;;
+    shell)
+        ${singularity} shell --nv --bind "${HOME}"/input:/input,"${HOME}"/data/"${bpath}":/mnt --nv ${torch_img} 
+        ;;
+    test) 
+        ${singularity} exec --nv --bind "${HOME}"/input:/input,"${HOME}"/data/"${bpath}":/mnt --nv ${torch_img} "${toxexec}"
+        ;;
+    help)
+        usage
+        exit 0
+        ;;
+esac
