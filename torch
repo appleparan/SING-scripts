@@ -11,7 +11,7 @@ singularity="/usr/local/bin/singularity"
 torch_img="/opt/singularity/torch-jskim.sif"
 cmd="help"
 bpath="run"
-pyexec="python3 --version"
+pyexec="python --version"
 toxexec="tox"
 cmexec="ls /mnt"
 
@@ -32,7 +32,7 @@ do
             ;;
         -p|--python)
             cmd="python"
-            pyexec="python3 $2"
+            pyexec="python $2"
             shift
             shift
             break
@@ -71,7 +71,8 @@ case $cmd in
         ${singularity} exec --nv --bind "${HOME}"/input:/input,"${HOME}"/data/"${bpath}":/mnt --nv ${torch_img} "${cmexec}"
         ;;
     python) 
-        ${singularity} exec --nv --bind "${HOME}"/input:/input,"${HOME}"/data/"${bpath}":/mnt --nv ${torch_img} "${pyexec}"
+        source activate
+        ${singularity} exec --nv --bind "${HOME}"/input:/input,"${HOME}"/data/"${bpath}":/mnt --nv ${torch_img} ${pyexec}
         ;;
     shell)
         ${singularity} shell --nv --bind "${HOME}"/input:/input,"${HOME}"/data/"${bpath}":/mnt --nv ${torch_img} 
