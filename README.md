@@ -4,14 +4,19 @@ Base image: nvidia/cuda + julia at Dockerhub
 
 # How to build 
 
-## Keras
+## Flux (Julia)
+```
+$ sudo singularity build /opt/singularity/flux-jskim.sif flux-julia.def
+```
+
+## Keras (Python)
 ```
 $ sudo singularity build /opt/singularity/keras-jskim.sif keras-py3.def
 ```
 
-## Flux
+## Torch (Python)
 ```
-$ sudo singularity build /opt/singularity/flux-jskim.sif flux-julia.def
+$ sudo singularity build /opt/singularity/torch-jskim.sif torch-julia.def
 ```
 
 ## Setting up Julia
@@ -22,7 +27,17 @@ $ julia
 * press `]`
 
 ```
-(v1.1) pkg> up
+(v1.4) pkg> up
+```
+
+## Setting up Python
+* Install python via [pyenv](https://github.com/pyenv/pyenv) and [pyenv-virtualenv](https://github.com/pyenv/pyenv-virtualenv)
+
+```
+$ pyenv install 3.8.2
+$ pyenv virtualenv 3.8.2 env
+$ pyenv local env
+(env) $ pip install package_name
 ```
 
 # How to setup executable files 
@@ -47,11 +62,6 @@ or you can make symbolic link (`ln -s src dest` to your `bin` directory)
 
 * assume we have `some_case_name` and save code results to `${HOME}/data/some_case_name`
 
-## Keras
-
-```
-$ keras -b some_case_name my_code.py
-```
 
 ## Flux
 
@@ -59,18 +69,37 @@ $ keras -b some_case_name my_code.py
 $ flux -b some_case_name my_code.jl
 ```
 
+## PyTorch
+
+```
+$ torch -b some_case_name my_code.py
+```
+
+## Keras
+
+```
+$ keras -b some_case_name my_code.py
+```
+
 # How to access shell inside singularity image
-
-## Keras (Python 3)
-
-```
-$ keras -s
-```
 
 ## Flux (Julia)
 
 ```
 $ flux -s
+```
+
+## PyTorch (Python 3)
+
+```
+$ torch -s
+```
+
+
+## Keras (Python 3)
+
+```
+$ keras -s
 ```
 
 # Important Things
