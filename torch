@@ -64,21 +64,21 @@ set -- "${POSITIONAL[@]}" # restore positional parameters
 
 
 # create directory for mount
-mkdir -p "${HOME}"/data/"${bpath}"
+mkdir -p /data/appleparan/"${bpath}"
 
 case $cmd in
     cmd)
-        ${singularity} exec --nv --bind "${HOME}"/input:/input,"${HOME}"/data/"${bpath}":/mnt --nv ${torch_img} "${cmexec}"
+        ${singularity} exec --nv --bind "${HOME}"/input:/input,/data/appleparan/"${bpath}":/mnt/data --nv ${torch_img} "${cmexec}"
         ;;
     python) 
         source activate
-        ${singularity} exec --nv --bind "${HOME}"/input:/input,"${HOME}"/data/"${bpath}":/mnt --nv ${torch_img} ${pyexec}
+        ${singularity} exec --nv --bind "${HOME}"/input:/input,/data/appleparan/"${bpath}":/mnt/data --nv ${torch_img} ${pyexec}
         ;;
     shell)
-        ${singularity} shell --nv --bind "${HOME}"/input:/input,"${HOME}"/data/"${bpath}":/mnt --nv ${torch_img} 
+        ${singularity} shell --nv --bind "${HOME}"/input:/input,/data/appleparan/"${bpath}":/mnt/data --nv ${torch_img} 
         ;;
     test) 
-        ${singularity} exec --nv --bind "${HOME}"/input:/input,"${HOME}"/data/"${bpath}":/mnt --nv ${torch_img} "${toxexec}"
+        ${singularity} exec --nv --bind "${HOME}"/input:/input,/data/appleparan/"${bpath}":/mnt/data --nv ${torch_img} "${toxexec}"
         ;;
     help)
         usage

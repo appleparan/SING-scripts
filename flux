@@ -68,23 +68,23 @@ done
 set -- "${POSITIONAL[@]}" # restore positional parameters
 
 # create directory for mount
-mkdir -p "${HOME}"/data/"${bpath}"
+mkdir -p /data/appleparan/"${bpath}"
 
 case $cmd in
     cmd)
-        ${singularity} exec --nv --bind "${HOME}"/input:/input,"${HOME}"/data/"${bpath}":/mnt ${flux_img} "${cmexec}"
+        ${singularity} exec --nv --bind "${HOME}"/input:/input,/data/appleparan/"${bpath}":/mnt/data ${flux_img} "${cmexec}"
         ;;
     julia) 
-        ${singularity} exec --nv --bind "${HOME}"/input:/input,"${HOME}"/data/"${bpath}":/mnt ${flux_img} ${jlexec[0]} ${jlexec[1]} "${jlexec[2]}"
+        ${singularity} exec --nv --bind "${HOME}"/input:/input,/data/appleparan/"${bpath}":/mnt/data ${flux_img} ${jlexec[0]} ${jlexec[1]} "${jlexec[2]}"
         ;;
     notebook)
-        ${singularity} exec --nv --bind "${HOME}"/input:/input,"${HOME}"/data/"${bpath}":/mnt ${flux_img} /usr/bin/nohup "/usr/local/bin/jupyter" notebook --port=8889 --no-browser &> jupyter.log 2>&1 &
+        ${singularity} exec --nv --bind "${HOME}"/input:/input,/data/appleparan/"${bpath}":/mnt/data ${flux_img} /usr/bin/nohup "/usr/local/bin/jupyter" notebook --port=8889 --no-browser &> jupyter.log 2>&1 &
         ;;
     shell)
-        ${singularity} shell --nv --bind "${HOME}"/input:/input,"${HOME}"/data/"${bpath}":/mnt ${flux_img} 
+        ${singularity} shell --nv --bind "${HOME}"/input:/input,/data/appleparan/"${bpath}":/mnt/data ${flux_img} 
         ;;
     test) 
-        ${singularity} exec --bind "${HOME}"/input:/input,"${HOME}"/data/"${bpath}":/mnt --nv ${flux_img} ${testexec[0]} ${testexec[1]} "${testexec[2]}"
+        ${singularity} exec --bind "${HOME}"/input:/input,/data/appleparan/"${bpath}":/mnt/data --nv ${flux_img} ${testexec[0]} ${testexec[1]} "${testexec[2]}"
         ;;
     help)
         usage
