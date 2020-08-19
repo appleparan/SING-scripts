@@ -16,7 +16,7 @@ $ sudo singularity build /opt/singularity/keras-jskim.sif keras-py3.def
 
 ## Torch (Python)
 ```
-$ sudo singularity build /opt/singularity/torch-jskim.sif torch-julia.def
+$ sudo singularity build /opt/singularity/torch-jskim.sif torch-py3.def
 ```
 
 ## Setting up Julia

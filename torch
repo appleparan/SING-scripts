@@ -12,7 +12,7 @@ torch_img="/opt/singularity/torch-jskim.sif"
 cmd="help"
 bpath="run"
 pyexec="python --version"
-toxexec="tox"
+testexec="pytest"
 cmexec="ls /mnt"
 
 while [[ $# -gt 0 ]]
@@ -44,7 +44,7 @@ do
             ;;
         -t|--test)
             cmd="test"
-            toxexec="tox"
+            testexec="pytest --pyargs $2"
             shift
             break
             ;;
@@ -78,7 +78,8 @@ case $cmd in
         ${singularity} shell --nv --bind "${HOME}"/input:/input,/data/appleparan/"${bpath}":/mnt/data --nv ${torch_img} 
         ;;
     test) 
-        ${singularity} exec --nv --bind "${HOME}"/input:/input,/data/appleparan/"${bpath}":/mnt/data --nv ${torch_img} "${toxexec}"
+        source activate
+        ${singularity} exec --nv --bind "${HOME}"/input:/input,/data/appleparan/"${bpath}":/mnt/data --nv ${torch_img} ${testexec}
         ;;
     help)
         usage
