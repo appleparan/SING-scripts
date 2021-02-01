@@ -1,5 +1,5 @@
 BootStrap: docker
-From: nvidia/cuda:10.0-cudnn7-devel-ubuntu18.04
+From: nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04
 
 %help
     Julia 1.3 docker image with cuda & cudnn
@@ -33,7 +33,7 @@ export DEBIAN_FRONTEND=noninteractive
 export JULIA_PATH=/usr/local/julia
 export PATH=$JULIA_PATH/bin:$PATH
 export JULIA_GPG=3673DF529D9049477F76B37566E3C7DC03D6E495
-export JULIA_VERSION=1.4.1
+export JULIA_VERSION=1.5.0
 
 # apt packages
 # select mirror
@@ -109,13 +109,11 @@ dpkg-reconfigure tzdata --frontend noninteractive tzdata
 	dpkgArch="$(dpkg --print-architecture)"; \
 	case "${dpkgArch##*-}" in \
 # amd64
-        amd64) tarArch='x86_64'; dirArch='x64'; sha256='fd6d8cadaed678174c3caefb92207a3b0e8da9f926af6703fb4d1e4e4f50610a' ;; \
-# arm32v7
-        armhf) tarArch='armv7l'; dirArch='armv7l'; sha256='bdcf24e0365f16092838daf7059bf5c0036bff9dc418511010e79249d9f71e96' ;; \
+        amd64) tarArch='x86_64'; dirArch='x64'; sha256='be7af676f8474afce098861275d28a0eb8a4ece3f83a11027e3554dcdecddb91' ;; \
 # arm64v8
-        arm64) tarArch='aarch64'; dirArch='aarch64'; sha256='788dc1e79344b52f65358ce4406dc5304bafd82c6af50bfa92a6ee5ea998e678' ;; \
+        arm64) tarArch='aarch64'; dirArch='aarch64'; sha256='6c6f1d3b6d16829e1ecc0528bb8bb15f9fe90b03fcee99509a3fe625cac32c51' ;; \
 # i386
-        i386) tarArch='i686'; dirArch='x86'; sha256='765e614b2754b20d50bae475dd9f3b794f445915084afa42523fd1b14e4c91fe' ;; \
+        i386) tarArch='i686'; dirArch='x86'; sha256='dafefde1fb1387730d804c7b4bb29c904311f0a52b12bf44c0c4ed4af6ae58e6' ;; \
         *) echo >&2 "error: current architecture ($dpkgArch) does not have a corresponding Julia binary release"; exit 1 ;; \
 	esac; \
 	\
