@@ -42,9 +42,15 @@ python3 -m pip install apt-mirror-updater
 apt-mirror-updater --auto-change-mirror
 
 # pkg
+# add for mscorefonts-installer
+# add-apt-repository multiverse
+# accept EULA for mscorefonts 
+echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | debconf-set-selections
 apt-get update 
+apt-get install -y ttf-mscorefonts-installer
 apt-get install -y libhdf5-dev locales tzdata python3-tk
 apt-get install -y chromium-browser firefox
+apt-get install -y libnetcdf-dev libnetcdff-dev
 apt-get clean
 
 # locales
