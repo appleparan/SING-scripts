@@ -91,7 +91,8 @@ RUN python3 -m pip install -U jupyterlab \
     jupyterlab-git \
     jupyter_contrib_nbextensions \
     jupyterlab_widgets \
-    ipywidgets
+    ipywidgets \
+    JLDracula
 
 RUN jupyter nbextensions_configurator enable && \
     jupyter contrib nbextension install && \
