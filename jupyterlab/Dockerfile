@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04
 
 ENV DEBIAN_FRONTEND=noninteractive \
     DEBCONF_NONINTERACTIVE_SEEN=true \
@@ -92,6 +92,7 @@ RUN python3 -m pip install -U jupyterlab \
     jupyter_contrib_nbextensions \
     jupyterlab_widgets \
     ipywidgets \
+    jupyter-server-proxy \
     JLDracula
 
 RUN jupyter nbextensions_configurator enable && \
@@ -105,6 +106,7 @@ RUN jupyter nbextensions_configurator enable && \
     jupyter nbextension enable execute_time/ExecuteTime && \
     jupyter nbextension enable toc2/main && \
     jupyter labextension install --no-build @jupyterlab/toc && \
+    jupyter labextension install --no-build @jupyterhub/jupyter-server-proxy && \
     jupyter lab build
 
 RUN apt-get autoclean && \
