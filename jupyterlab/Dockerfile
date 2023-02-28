@@ -31,7 +31,7 @@ RUN apt-get install -y --no-install-recommends \
     libfreetype6-dev libpng-dev libopenblas-dev liblapack-dev \
     libhdf5-dev hdf5-tools \
     openssh-server openssh-client ncurses-term \
-    htop zip unzip git wget curl glances vim dpkg-sig keychain
+    htop zip unzip git wget curl glances vim dpkg-sig keychain fontconfig
 
 # Install from modern-linux: https://github.com/ibraheemdev/modern-unix
 RUN apt-get install -y --no-install-recommends \
@@ -41,6 +41,8 @@ RUN apt-get install -y --no-install-recommends \
 RUN apt-get install -y --no-install-recommends fonts-firacode
 RUN apt-get install -y --no-install-recommends fonts-nanum fonts-nanum-extra
 RUN apt-get install -y --no-install-recommends fonts-noto fonts-noto-cjk
+RUN curl -L https://github.com/orioncactus/pretendard/raw/main/packages/pretendard/dist/public/variable/PretendardVariable.ttf -o /usr/local/share/fonts/PretendardVariable.ttf
+RUN fc-cache -f -v
 
 # Install git-lfs
 WORKDIR /tmp
