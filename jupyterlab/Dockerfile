@@ -1,4 +1,5 @@
-FROM nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04
+# FROM nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04
+FROM nvcr.io/nvidia/tensorrt:23.01-py3
 
 ENV DEBIAN_FRONTEND=noninteractive \
     DEBCONF_NONINTERACTIVE_SEEN=true \
@@ -35,7 +36,7 @@ RUN apt-get install -y --no-install-recommends \
 
 # Install from modern-linux: https://github.com/ibraheemdev/modern-unix
 RUN apt-get install -y --no-install-recommends \
-    bat exa fd-find ripgrep silversearcher-ag
+    bat fd-find ripgrep silversearcher-ag
 
 # Install Fonts
 RUN apt-get install -y --no-install-recommends fonts-firacode
